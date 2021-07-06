@@ -1,4 +1,4 @@
-package com.pkgloabl.subscriber.aop;
+package com.pkglobal.subscriber.aop;
 
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
