@@ -27,17 +27,17 @@ public class DefaultConsumerService implements ConsumerService {
 
     @Override
     @KafkaListener(topics = "${cloudkarafka.topic}")
-    public void consumeService(String messageRequestString) throws Exception {
+    public void consumeService(String messageRequestString) {
         MessageRequest messageRequest =
                 ObjectMapperUtil.returnObjectFromJsonString(messageRequestString);
         MessageRequest maskMessageRequest = messageRequestConverter.convert(messageRequest);
         UUID uuid = UUID.randomUUID();
         logger.info("Started to consume messageRequest : {} and UUID:{} ", maskMessageRequest,
-                uuid.toString());
+                uuid);
         Audit auditEntity = buildAuditEntity(messageRequestString, messageRequest);
         auditDataRepository.save(auditEntity);
         MessageResponse response = buildMessageResponse();
-        logger.info("Finished to consume message : {} and UUID:{} ", response, uuid.toString());
+        logger.info("Finished to consume message : {} and UUID:{} ", response, uuid);
 
     }
 

@@ -21,12 +21,12 @@ public class DefaultSubscriberAspect {
     private ErrorDataRepository errorDataRepository;
 
     @AfterThrowing(
-            pointcut = "execution(* com.prokarma.subscriber.service.DefaultConsumerService.*(..)) and args(messageRequestString)",
+            pointcut = "execution(* com.pkglobal.subscriber.service.DefaultConsumerService.*(..)) and args(messageRequestString)",
             throwing = "ex")
     public void logError(Exception ex, String messageRequestString) {
         Error errorEntity = buildErrorEntity(messageRequestString, ex);
         errorDataRepository.save(errorEntity);
-        ErrorResponse errorResponse = buildErrorResponse(messageRequestString, ex);
+        ErrorResponse errorResponse = buildErrorResponse(ex);
         logger.error("ErrorResponse :{}", errorResponse);
     }
 
@@ -38,7 +38,7 @@ public class DefaultSubscriberAspect {
         return errorEntity;
     }
 
-    private ErrorResponse buildErrorResponse(String messageRequestString, Exception e) {
+    private ErrorResponse buildErrorResponse(Exception e) {
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setStatus("error");
         errorResponse.setMessage(e.getMessage());
