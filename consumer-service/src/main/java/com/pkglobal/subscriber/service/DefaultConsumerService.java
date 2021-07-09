@@ -29,7 +29,6 @@ public class DefaultConsumerService implements ConsumerService {
 	@Override
 	@KafkaListener(topics = "${cloudkarafka.topic}")
 	public void consumeService(String messageRequestString) {
-		System.out.println(messageRequestString);
 		MessageRequest messageRequest = ObjectMapperUtil.returnObjectFromJsonString(messageRequestString);
 		MessageRequest maskMessageRequest = messageRequestConverter.convert(messageRequest);
 		UUID uuid = UUID.randomUUID();
