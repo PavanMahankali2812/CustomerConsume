@@ -1,9 +1,7 @@
 package com.pkglobal.subscriber.aop;
 
 import org.aspectj.lang.annotation.AfterThrowing;
-import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,22 +22,6 @@ public class DefaultSubscriberAspect {
 
 	@AfterThrowing(pointcut = "execution(* com.pkglobal.subscriber.service.DefaultConsumerService.*(..)) and args(messageRequestString)", throwing = "ex")
 	public void logError(Exception ex, String messageRequestString) {
-		Error errorEntity = buildErrorEntity(messageRequestString, ex);
-		errorDataRepository.save(errorEntity);
-		ErrorResponse errorResponse = buildErrorResponse(ex);
-		logger.error("ErrorResponse :{}", errorResponse);
-	}
-
-	@Before(value = "execution(* com.pkglobal.subscriber.service.DefaultConsumerService.*(..)) and args(messageRequestString)")
-	public void beforeAdvice(Exception ex, String messageRequestString) {
-		Error errorEntity = buildErrorEntity(messageRequestString, ex);
-		errorDataRepository.save(errorEntity);
-		ErrorResponse errorResponse = buildErrorResponse(ex);
-		logger.error("ErrorResponse :{}", errorResponse);
-	}
-
-	@Around(value = "execution(* com.pkglobal.subscriber.service.DefaultConsumerService.*(..)) and args(messageRequestString)")
-	public void afterAdvice(Exception ex, String messageRequestString) {
 		Error errorEntity = buildErrorEntity(messageRequestString, ex);
 		errorDataRepository.save(errorEntity);
 		ErrorResponse errorResponse = buildErrorResponse(ex);
