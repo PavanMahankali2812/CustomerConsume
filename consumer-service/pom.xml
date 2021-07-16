@@ -90,7 +90,9 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-aop</artifactId>
 		</dependency>
+		
 	</dependencies>
+	
 
 	<repositories>
 		<!-- Splunk is not in the maven central repo -->

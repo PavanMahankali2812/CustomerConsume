@@ -19,7 +19,6 @@ public class DefaultMessageRequestMaskConverter implements MaskConverter<Message
 		messageRequest.setEmail(messageRequest.getEmail().replaceAll(
 				(SubscriberConstants.EMAIL_ID_REGEX_EXPRESSION.getRegexExpression()),
 				SubscriberConstants.MASK_CONSTANTS.getRegexExpression()));
-		messageRequest.setFirstName(messageRequest.getFirstName());
 		return messageRequest;
 
 	}

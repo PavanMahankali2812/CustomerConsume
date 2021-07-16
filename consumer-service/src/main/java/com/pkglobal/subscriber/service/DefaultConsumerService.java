@@ -1,7 +1,6 @@
 package com.pkglobal.subscriber.service;
 
-import java.util.UUID;
-
+import org.apache.kafka.common.errors.TimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.pkglobal.subscriber.converter.DefaultMessageRequestMaskConverter;
 import com.pkglobal.subscriber.entity.Audit;
+import com.pkglobal.subscriber.exception.ConsumerServiceException;
 import com.pkglobal.subscriber.model.MessageRequest;
 import com.pkglobal.subscriber.model.MessageResponse;
 import com.pkglobal.subscriber.repository.AuditDataRepository;
@@ -29,14 +29,18 @@ public class DefaultConsumerService implements ConsumerService {
 	@Override
 	@KafkaListener(topics = "${cloudkarafka.topic}")
 	public void consumeService(String messageRequestString) {
-		MessageRequest messageRequest = ObjectMapperUtil.returnObjectFromJsonString(messageRequestString);
-		MessageRequest maskMessageRequest = messageRequestConverter.convert(messageRequest);
-		UUID uuid = UUID.randomUUID();
-		logger.info("Started to consume messageRequest : {} and UUID:{} ", maskMessageRequest, uuid);
-		Audit auditEntity = buildAuditEntity(messageRequestString, messageRequest);
-		auditDataRepository.save(auditEntity);
-		MessageResponse response = buildMessageResponse();
-		logger.info("Finished to consume message : {} and UUID:{} ", response, uuid);
+		try {
+			MessageRequest messageRequest = ObjectMapperUtil.returnObjectFromJsonString(messageRequestString);
+			MessageRequest maskMessageRequest = messageRequestConverter.convert(messageRequest);
+			logger.info("Started to consume messageRequest : {}", maskMessageRequest);
+			Audit auditEntity = buildAuditEntity(messageRequestString, messageRequest);
+			auditDataRepository.save(auditEntity);
+			MessageResponse response = buildMessageResponse();
+			logger.info("Finished to consume message : {}", response);
+		} catch (TimeoutException ex) {
+			throw new ConsumerServiceException(ex.getMessage());
+
+		}
 
 	}
 
